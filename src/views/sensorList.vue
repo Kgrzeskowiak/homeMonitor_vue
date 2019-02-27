@@ -10,10 +10,10 @@
         </tr>
       </thead>
       <tr v-for="sensor in sensorList">
-      <td>{{sensor.id}}</td>
-      <td>{{sensor.publisher}}</td>
-      <td>{{sensor.topicSubscribed}}</td>
-      <td>{{sensor.lastActivity}}</td>
+      <td>{{sensorList.id}}</td>
+      <td>{{sensorList.publisher}}</td>
+      <!-- <td>{{sensor.topicSubscribed}}</td>
+      <td>{{sensor.lastActivity}}</td> -->
     </tr>
     </table>
   </div>
@@ -21,29 +21,31 @@
 <script>
 import DataHandler from './DataHandler.js'
 const axios = require('axios')
-
+import { mapState } from 'vuex'
 export default {
   name: 'sensorList',
   components: {
     Sensor
   },
+  computed: mapState([
+    'sensorList'
+  ]),
   data () {
     return {
-      sensorList: [
-      ]
     }
   },
   mounted () {
-    axios.get('http://192.168.1.9:3000/deviceList').then((response) => {
-      Object.keys(response.data).forEach((key) => {
-        this.sensorList.push({
-          id: response.data[key].id,
-          publisher: response.data[key].publisher,
-          topicSubscribed: response.data[key].topicSubscribed,
-          lastActivity: response.data[key].lastActivity
-        })
-      })
-    })
+    this.$store.dispatch('getSensorList')
+    // axios.get('http://192.168.1.9:3000/deviceList').then((response) => {
+    //   Object.keys(response.data).forEach((key) => {
+    //     this.sensorList.push({
+    //       id: response.data[key].id,
+    //       publisher: response.data[key].publisher,
+    //       topicSubscribed: response.data[key].topicSubscribed,
+    //       lastActivity: response.data[key].lastActivity
+    //     })
+    //   })
+    // })
   }
 }
 </script>
