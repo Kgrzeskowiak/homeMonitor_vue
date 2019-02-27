@@ -6,12 +6,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    sensorList : []
+    sensorList : [],
+    sensorListLoaded : false
   },
   mutations: {
-      addObject(state,data){
+      addSensorToList(state,data){
           state.sensorList.push(data)
+      },
+      setSensorListLoaded(state){
+        state.sensorListLoaded = true;
       }
+
   },
   actions: {
     getSensorList(context) {
@@ -23,9 +28,10 @@ export default new Vuex.Store({
                 topicSubscribed: response.data[key].topicSubscribed,
                 lastActivity: response.data[key].lastActivity
               }
-              context.commit('addObject', sensor)
+              context.commit('addSensorToList', sensor)
             })
           })
     }
+
   }
 })

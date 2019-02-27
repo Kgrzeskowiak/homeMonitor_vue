@@ -6,15 +6,17 @@
           <th>Nazwa</th>
           <th>Kanał</th>
           <th>Nasłuch</th>
-          <th>Aktywność</th>
+          <th>Ostatnia aktywność</th>
         </tr>
       </thead>
-      <tr v-for="sensor in sensorList">
-      <td>{{sensorList.id}}</td>
-      <td>{{sensorList.publisher}}</td>
-      <!-- <td>{{sensor.topicSubscribed}}</td>
-      <td>{{sensor.lastActivity}}</td> -->
+      <tbody v-for="sensor in sensors">
+      <tr>
+      <td>{{sensor.id}}</td>
+      <td>{{sensor.publisher}}</td>
+      <td>{{sensor.topicSubscribed}}</td>
+      <td>{{ sensor.lastActivity | moment("from", true) }}</td>
     </tr>
+    </tbody>
     </table>
   </div>
 </template>
@@ -24,28 +26,17 @@ const axios = require('axios')
 import { mapState } from 'vuex'
 export default {
   name: 'sensorList',
-  components: {
-    Sensor
-  },
-  computed: mapState([
-    'sensorList'
-  ]),
-  data () {
-    return {
+  computed: {
+    sensors(){
+    return  this.$store.state.sensorList
+    }},
+  mounted(){
+    if (!this.$store.state.sensorListLoaded)
+    {
+      this.$store.dispatch('getSensorList')
+      this.$store.commit('setSensorListLoaded')
     }
-  },
-  mounted () {
-    this.$store.dispatch('getSensorList')
-    // axios.get('http://192.168.1.9:3000/deviceList').then((response) => {
-    //   Object.keys(response.data).forEach((key) => {
-    //     this.sensorList.push({
-    //       id: response.data[key].id,
-    //       publisher: response.data[key].publisher,
-    //       topicSubscribed: response.data[key].topicSubscribed,
-    //       lastActivity: response.data[key].lastActivity
-    //     })
-    //   })
-    // })
+   
   }
 }
 </script>
