@@ -1,38 +1,50 @@
 <template>
   <div class="dashboard">
-    <div class="temperature">
-      <temperature/>
-    </div>
-    <div class="temperature">
-      <temperature/>
-    </div>
-    <div class="temperature"> 
-      <temperature/>
-    </div>
+      <div class="row">
+        <temperature class="temperature"v-for="reading in lastReadings":reading="reading"/>
+      </div>
+    <div class="row">
+      </div>
   </div>
 </template>
-
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-import Temperature from '@/components/Temperature.vue'
+import Temperature from "@/components/Temperature.vue";
 
 export default {
-  name: 'dashboard',
+  name: "dashboard",
+  computed : {
+    lastReadings()
+    {
+      return this.$store.state.lastReadings
+   }},
   components: {
-    HelloWorld,
     Temperature
+  },
+  mounted()
+  {
+    this.$store.dispatch('getLastReadings')
+     setInterval(() =>
+     {
+     this.$store.dispatch('getLastReadings')
+    },60000)
   }
-}
+};
 </script>
 
 <style>
-.dashboard{
-  display : inline-block;
-  color : red;
+.dashboard {
+font-family: 'Montserrat', sans-serif;
+margin-top : 2em;
+
 }
-.temperature{
-  display : inline-block;
+.row{
+  display: flex;
+  justify-content: center;
+}
+.temperature {
+ margin-left : 1.5%;
+ margin-right : 1.5%;
 }
 a {
   color: green;

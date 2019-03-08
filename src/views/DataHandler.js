@@ -1,12 +1,9 @@
 class DataHandler {
   constructor () {
-    // this.errorHandler = errorHandler
     this.temperatureEndpoint = 'http://192.168.1.9:3000/temperature'
     this.locationTemperatureEndpoint = 'http://192.168.1.9:3000/locationTemperature'
     this.devicesListEndpoint = 'http://192.168.1.9:3000/deviceList'
-    // this.deviceChangedEvent = new EventEmitter();
-    // this.deviceConnectedEvent = new EventEmitter();
-    // this.deviceDisconnectedEvent = new EventEmitter();
+   
   }
   getLocationTemperature (location) {
     var getJsonPromise = new Promise((resolve, reject) => {

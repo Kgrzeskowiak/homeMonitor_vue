@@ -7,7 +7,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     sensorList : [],
-    sensorListLoaded : false
+    sensorListLoaded : false,
+    lastReadings : {}
   },
   mutations: {
       addSensorToList(state,data){
@@ -15,6 +16,23 @@ export default new Vuex.Store({
       },
       setSensorListLoaded(state){
         state.sensorListLoaded = true;
+      },
+      setLastReading(state, reading){
+        state.lastReadings = reading
+        Object.keys(state.lastReadings).forEach(key => {
+          if (state.lastReadings[key].location == 'floor')
+          { 
+            state.lastReadings[key].location = 'Piętro';
+          }
+          if (state.lastReadings[key].location == 'ground')
+          { 
+            state.lastReadings[key].location = 'Parter';
+          }
+          if (state.lastReadings[key].location == 'outdoor')
+          { 
+            state.lastReadings[key].location = 'Zewnętrzny';
+          }
+        })
       }
 
   },
@@ -31,7 +49,17 @@ export default new Vuex.Store({
               context.commit('addSensorToList', sensor)
             })
           })
-    }
+        },
+      getLastReadings(context) {
+        var readingList = {}
+        axios.get('http://192.168.1.9:3000/lastReadings').then((response) => {
+          response.data.forEach(reading => {
+            readingList[reading.location] = {temperature : reading.temperature, humidity : reading.humidity, location : reading.location}
+          })
+          context.commit('setLastReading', readingList)
+  
+        })
+      }
 
   }
 })
