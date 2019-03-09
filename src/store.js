@@ -8,11 +8,16 @@ export default new Vuex.Store({
   state: {
     sensorList : [],
     sensorListLoaded : false,
-    lastReadings : {}
+    lastReadings : {},
+    connected : false,
+    garageGateState : "Zamknięte"
   },
   mutations: {
       addSensorToList(state,data){
           state.sensorList.push(data)
+      },
+      setGarageState(state, payload){
+            state.garageGateState = payload
       },
       setSensorListLoaded(state){
         state.sensorListLoaded = true;
@@ -34,7 +39,6 @@ export default new Vuex.Store({
           }
         })
       }
-
   },
   actions: {
     getSensorList(context) {
@@ -59,7 +63,12 @@ export default new Vuex.Store({
           context.commit('setLastReading', readingList)
   
         })
+      },
+      SOCKET_connect() {
+        this.connected = true;
+      },
+      SOCKET_garageState(context, payload) {
+        context.commit('setGarageState', payload)
       }
-
   }
 })
