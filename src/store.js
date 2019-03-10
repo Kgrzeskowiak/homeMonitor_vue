@@ -10,9 +10,15 @@ export default new Vuex.Store({
     sensorListLoaded : false,
     lastReadings : {},
     connected : false,
-    garageGateState : "Zamknięte"
+    garageGateState : "Zamknięte",
+    readings : {}
   },
   mutations: {
+      saveReadings(state,data){
+        console.log("To jest data", data)
+        state.readings = data;
+    
+      },
       addSensorToList(state,data){
           state.sensorList.push(data)
       },
@@ -22,6 +28,7 @@ export default new Vuex.Store({
       setSensorListLoaded(state){
         state.sensorListLoaded = true;
       },
+
       setLastReading(state, reading){
         state.lastReadings = reading
         Object.keys(state.lastReadings).forEach(key => {
@@ -62,6 +69,12 @@ export default new Vuex.Store({
           })
           context.commit('setLastReading', readingList)
   
+        })
+      },
+      getReadingsForSensorInTime(context, queryParams){
+        axios.get('http://192.168.1.9:3000/temperature' + '/?nodeName=' + queryParams.sensorName + '&timeRange=' + queryParams.timeRange).then((response) => {
+          context.commit('saveReadings',response.data)
+          console.log("commit")
         })
       },
       SOCKET_connect() {
