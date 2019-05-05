@@ -1,40 +1,27 @@
 
 <script>
-import { Line } from 'vue-chartjs'
+import { Line, mixins } from 'vue-chartjs'
+const { reactiveProp } = mixins
 
 export default {
   name: 'LineChart',
   extends: Line,
+  mixins: [reactiveProp],
   props: {
     reading: {
       required: false
     }
   },
-  data() {
-    // return {
-    //   dataChart : {
-    //   labels: [],
-    //   datasets: [
-    //     {
-    //       label: 'Temperatura',
-    //       backgroundColor: '#f87979',
-    //       data: [],
-    //       fill : false
-    //     },
-    //     {
-    //     label: 'Wilgotność',
-    //     backgroundColor: '#f12888',
-    //     data: [],
-    //     fill : false
-
-    //   } 
-    //   ]
-    //   }
-    // }
+  chartdata : {
+    type : Object,
+    default : null
+  },
+  options : {
+    type : Object,
+    default : null
   },
   mounted () {
-    console.log(this.reading)
-    this.renderChart( this.reading, {responsive: true, maintainAspectRatio: false})
+    this.renderChart( this.chartData, {responsive: true, maintainAspectRatio: false})
   }
 }
 </script>

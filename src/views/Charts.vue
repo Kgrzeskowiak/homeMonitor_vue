@@ -1,63 +1,54 @@
 <template>
 <div>
-<p>do wyboru do koloru</p>
-  <LineChart :reading="TemperatureReadings"/>
+  <div>
+ <ChartSelection />
+</div>
+  <LineChart v-if="loaded" :chartData="dataForChart"/>
   </div>
 </template>
 
 <script>
 import LineChart from "@/components/LineChart.vue";
+import ChartSelection from "@/components/ChartSelection.vue";
 import { race } from 'q';
-
 export default {
   name : 'Charts',
-  components : {LineChart},
+  components : {LineChart, ChartSelection},
   data() {
     return {
     queryParams: {sensorName: "Czujnik Temperatury Góra", timeRange: -1},
-    TemperatureReadings : []
-    }
-  },
-  computed: {
-    getData: function ()
-    {
-      console.log("to są readingsy w funkcji", readings)
-      var dataForChart = {
+    loaded : false,
+    dataForChart : {
       labels: [],
       datasets: [
         {
           label: 'Temperatura',
-          backgroundColor: '#f87979',
-          data: [],
-          fill : false
+          backgroundColor: '#f44242',
+          data: []
         },
         {
         label: 'Wilgotność',
-        backgroundColor: '#f12888',
-        data: [],
-        fill : false
-
+        backgroundColor: '#41bbf4',
+        data: []
       } 
       ]
       }
-      this.$store.state.readings.forEach(element => {
-        dataForChart.labels.push(element.measurmentDate)
-        dataForChart.datasets[0].data.push(element.temperature)
-        dataForChart.datasets[1].data.push(element.humidity)
-      });
-      
     }
   },
-  created(){
-     this.$store.dispatch("getReadingsForSensorInTime", this.queryParams).then(() =>
-     {
-       console.log("ASYNC ???")
-     })
-    
-  },
   mounted() {
-    
-//  this.prepareData(this.$store.state.readings)
+  this.fillData()
+  },
+  methods: {
+    fillData () {
+       this.$store.dispatch("getReadingsForSensorInTime", this.queryParams).then(response => {
+       this.$store.state.readings.forEach(element => {
+       this.dataForChart.labels.push(element.measurmentDate)
+       this.dataForChart.datasets[0].data.push(element.temperature)
+       this.dataForChart.datasets[1].data.push(element.humidity)
+         })
+      this.loaded= true;
+       })
+    }
   }
 }
 </script>

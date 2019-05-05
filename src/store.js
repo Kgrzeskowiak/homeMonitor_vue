@@ -15,9 +15,7 @@ export default new Vuex.Store({
   },
   mutations: {
       saveReadings(state,data){
-        console.log("To jest data", data)
         state.readings = data;
-    
       },
       addSensorToList(state,data){
           state.sensorList.push(data)
@@ -72,9 +70,11 @@ export default new Vuex.Store({
         })
       },
       getReadingsForSensorInTime(context, queryParams){
-        axios.get('http://192.168.1.9:3000/temperature' + '/?nodeName=' + queryParams.sensorName + '&timeRange=' + queryParams.timeRange).then((response) => {
+        return new Promise((resolve, reject) => { 
+          axios.get('http://192.168.1.9:3000/temperature' + '/?nodeName=' + queryParams.sensorName + '&timeRange=' + queryParams.timeRange).then((response) => {
           context.commit('saveReadings',response.data)
-          console.log("commit")
+          resolve()
+          })
         })
       },
       SOCKET_connect() {
