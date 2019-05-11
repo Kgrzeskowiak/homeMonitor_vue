@@ -1,14 +1,7 @@
 <template>
     <div>
-        <p> XXX</P>
-        <label>Czujnik:</label>
-  <select v-model="selected">
-<option v-for="sensor in sensors">{{sensor.id}}</option>
-</select>
-<p>xxx2</p>
+  <v-select :items="items" label="Wybierz czujnik" v-model="selected" @change="grabValue"></v-select>
 </div>
-<!-- </select> -->
-    </div>
 </template>
 
 <script>
@@ -16,12 +9,19 @@ export default {
     name : 'ChartSelection',
     data() {
         return {
-            selected : ''
+            selected : '',
     }
     },
 computed: {
-sensors() {
-      return this.$store.state.sensorList;
+items() {
+   let sensorList = []
+   this.$store.state.sensorList.forEach(sensor => {
+      if (sensor.id != 'main_listener')
+        {
+            sensorList.push(sensor.id)
+        }
+   });
+    return sensorList
 }},
 created() {
     if (!this.$store.state.sensorListLoaded) {
@@ -29,6 +29,14 @@ created() {
       this.$store.commit("setSensorListLoaded");
     }
 },
+methods:{
+    grabValue: function () {
+        this.$emit('reRender')
+        var queryParams = {sensorName: this.selected, timeRange: -1}
+        this.$store.dispatch("getReadingsForSensorInTime", queryParams)
+        this.$emit('reRender')
+    }
+}
 }
 
 </script>
