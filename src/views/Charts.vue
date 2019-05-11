@@ -1,9 +1,10 @@
 <template>
 <div>
   <div>
- <ChartSelection />
+ <ChartSelection v-on:updateChart="renderChartForSensor($event)"/>
 </div>
-  <LineChart v-if="loaded" :chartData="dataForChart" v-on:reRender="renderChartForSensor()" />
+  <LineChart v-if="loaded" :chartData="dataForChart" />
+  <v-btn v-on:click="eraseChart()">XX</v-btn>
   </div>
 </template>
 
@@ -49,11 +50,12 @@ export default {
       this.loaded= true;
        })
     },
-    renderChartForSensor()
+    renderChartForSensor(sensorId)
     {
-      console.log("LECI")
-       this.queryParams = queryParams;
-       this.$store.dispatch("getReadingsForSensorInTime", queryParams).then(response => {
+      this.loaded = false; //Tylko dzieki temu sie przebudowuje
+       this.queryParams = {sensorName : sensorId, timeRange :-1}
+       this.eraseChart()
+       this.$store.dispatch("getReadingsForSensorInTime", this.queryParams).then(response => {
        this.$store.state.readings.forEach(element => {
        this.dataForChart.labels.push(element.measurmentDate)
        this.dataForChart.datasets[0].data.push(element.temperature)
@@ -61,6 +63,21 @@ export default {
          })
       this.loaded= true;
        })
+    },
+    eraseChart()
+    {
+       while (this.dataForChart.labels.length > 0)
+       {
+         this.dataForChart.labels.pop();
+       }
+       while (this.dataForChart.datasets[0].data.length > 0)
+       {
+         this.dataForChart.datasets[0].data.pop()
+       }
+       while (this.dataForChart.datasets[1].data.length > 0)
+       {
+         this.dataForChart.datasets[1].data.pop()
+       }
     }
     
   }

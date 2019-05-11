@@ -1,6 +1,6 @@
 <template>
     <div>
-  <v-select :items="items" label="Wybierz czujnik" v-model="selected" @change="grabValue"></v-select>
+  <v-select :items="items" label="Wybierz czujnik" v-model="selected" @change="emitSelectedValue"></v-select>
 </div>
 </template>
 
@@ -30,11 +30,8 @@ created() {
     }
 },
 methods:{
-    grabValue: function () {
-        this.$emit('reRender')
-        var queryParams = {sensorName: this.selected, timeRange: -1}
-        this.$store.dispatch("getReadingsForSensorInTime", queryParams)
-        this.$emit('reRender')
+    emitSelectedValue: function () {
+        this.$emit('updateChart', this.selected)
     }
 }
 }

@@ -70,6 +70,7 @@ export default new Vuex.Store({
         })
       },
       getReadingsForSensorInTime(context, queryParams){
+        console.log("getreading leci")
         return new Promise((resolve, reject) => { 
           axios.get('http://192.168.1.9:3000/temperature' + '/?nodeName=' + queryParams.sensorName + '&timeRange=' + queryParams.timeRange).then((response) => {
           context.commit('saveReadings',response.data)
