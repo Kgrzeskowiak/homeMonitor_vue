@@ -11,7 +11,8 @@ export default new Vuex.Store({
     lastReadings : {},
     connected : false,
     garageGateState : "Zamknięte",
-    readings : {}
+    readings : {},
+    config : ''
   },
   mutations: {
       saveReadings(state,data){
@@ -26,7 +27,10 @@ export default new Vuex.Store({
       setSensorListLoaded(state){
         state.sensorListLoaded = true;
       },
-
+      updateConfig(state, payload)
+      {
+        state.config = payload;
+      },
       setLastReading(state, reading){
         state.lastReadings = reading
         Object.keys(state.lastReadings).forEach(key => {
@@ -66,11 +70,9 @@ export default new Vuex.Store({
             readingList[reading.location] = {temperature : reading.temperature, humidity : reading.humidity, location : reading.location}
           })
           context.commit('setLastReading', readingList)
-  
         })
       },
       getReadingsForSensorInTime(context, queryParams){
-        console.log("getreading leci")
         return new Promise((resolve, reject) => { 
           axios.get('http://192.168.1.9:3000/temperature' + '/?nodeName=' + queryParams.sensorName + '&timeRange=' + queryParams.timeRange).then((response) => {
           context.commit('saveReadings',response.data)
@@ -78,10 +80,17 @@ export default new Vuex.Store({
           })
         })
       },
+      getAlarmConfig(context)
+      {
+        axios.get('http://192.168.1.9:3000/alarmConfig').then((response => {
+          context.commit('updateConfig', response.data)
+        }))
+      },
       SOCKET_connect() {
         this.connected = true;
       },
       SOCKET_garageState(context, payload) {
+        console.log(payload)
         context.commit('setGarageState', payload)
       }
   }

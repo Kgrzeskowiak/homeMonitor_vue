@@ -8,21 +8,26 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'dashboard',
+      name: 'Dashboard',
       component: Dashboard
     },
     {
-      path: '/sensorList',
-      name: 'sensorList',
+      path: '/SensorList',
+      name: 'SensorList',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/sensorList.vue')
+      component: () => import(/* webpackChunkName: "about" */ './views/SensorList.vue')
     },
     {
     path: '/Charts',
-    name: 'charts',
-    component: () =>import ('./views/Charts.vue')
+    name: 'Charts',
+    component: () => import('./views/Charts.vue')
+    },
+    {
+    path: '/ConfigAlarm',
+    name: 'ConfigAlarm',
+    component: () => import('./views/ConfigAlarm.vue')
     }
   ]
 })

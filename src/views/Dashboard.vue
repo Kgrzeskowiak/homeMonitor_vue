@@ -11,7 +11,6 @@
   </div>
 </template>
 <script>
-// @ is an alias to /src
 import Temperature from "@/components/Temperature.vue";
 import GarageGate from "@/components/GarageGate.vue"
 

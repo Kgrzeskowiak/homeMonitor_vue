@@ -5,8 +5,9 @@
       </v-toolbar-title>
       <v-toolbar-items>
         <v-btn flat left to="/" class="">Tablica</v-btn>
-        <v-btn flat left to="/sensorList">Lista czujników</v-btn>
-        <v-btn flat left to="/charts">Wykresy</v-btn>
+        <v-btn flat left to="/SensorList">Lista czujników</v-btn>
+        <v-btn flat left to="/Charts">Wykresy</v-btn>
+        <v-btn flat left to="/ConfigAlarm">Konfiguracja alarmu</v-btn>
       </v-toolbar-items>
       
       </v-toolbar>
