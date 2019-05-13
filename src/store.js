@@ -30,6 +30,7 @@ export default new Vuex.Store({
       updateConfig(state, payload)
       {
         state.config = payload;
+        console.log("config updated")
       },
       setLastReading(state, reading){
         state.lastReadings = reading
@@ -84,13 +85,21 @@ export default new Vuex.Store({
       {
         axios.get('http://192.168.1.9:3000/alarmConfig').then((response => {
           context.commit('updateConfig', response.data)
+    
+        }))
+      },
+      setAlarmConfig(context, config)
+      {
+        axios.post('http://192.168.1.9:3000/alarmConfig', config).then((response =>
+        {
+          console.log(response)
+          context.commit('updateConfig', config)
         }))
       },
       SOCKET_connect() {
         this.connected = true;
       },
       SOCKET_garageState(context, payload) {
-        console.log(payload)
         context.commit('setGarageState', payload)
       }
   }
